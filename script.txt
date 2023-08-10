@@ -1,0 +1,59 @@
+-----------------
+00_batch.bat
+-----------------
+Start out with an empty script.
+
+We have a main.c we are going to compile.
+
+cl src\main.c
+
+Great.  It worked, and it is very simple.
+
+Also, I don't like that is spits out each line while running.
+And the main.obj file is added to the main director.
+
+Let's fix the first part.
+if we add 
+
+    echo off
+
+to the start this will only show the output.
+So the REM comments will no longer be displayed.
+
+but 'echo off' is still displayed.  Fix that too
+
+    @echo off
+
+add -nologo to the cl command to stop printing out
+the compiler info
+https://learn.microsoft.com/en-us/cpp/build/reference/compiler-options-listed-alphabetically?view=msvc-170
+
+-----------------
+01_batch.bat
+-----------------
+Notice this puts the main.obj and main.exe in the same folder as
+the batch file.  That's going to get messy real fast.
+
+What I'd like is to put all this stuff in a folder 
+called 'bin'
+
+you might try this:
+
+mkdir bin
+cd bin
+
+so what does that do?
+well, we can't find the file.
+And now run it again?  opps, we are now in a different directory...
+
+If we run again we see a message
+'A subdirectory or file bin already exists.'
+
+Ugh...  Why is this so hard?
+
+First let's get rid of the message.
+
+    if not exist bin mkdir bin
+
+
+

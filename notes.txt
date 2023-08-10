@@ -1,0 +1,115 @@
+How many different kinds of batch files should we have?
+Probably for the first one just a simple (?) one.
+
+With the final_batch what stuff in here needs to
+be explained...
+
+Inspired by:
+https://github.com/martincohen/Punity
+
+REM for comments
+@echo off
+
+I'm not actually sure what these even do
+    setlocal enableextensions enabledelayedexpansion
+
+set var=value
+
+also what does this do?
+    set var = !value!
+
+if not exist bin mkdir bin
+    
+
+The parse args part:
+
+    :parse_args
+    if "%~1" == "" goto :end_parse_args
+
+    if "%~1" == "-s" (
+        if not "%~2" == "" (
+            set TEST_SUITE=-s %~2 
+            echo Running Tests for "%~2"
+            shift
+        ) else (
+            echo Missing value for the -s flag.
+        )
+    )
+
+    :end_parse_args
+
+The echo section
+echo -------------------------------------------------
+echo - Compiler:      %compiler%
+echo - Include:       %target_include%
+echo - Configuration: %configuration%
+echo - Target C:      %target%.c
+echo - Output:        bin\%target_exe%
+echo -------------------------------------------------
+
+
+pushd bin, popd
+
+Compling code:
+    cl !common_c! -!win_runtime_lib! -Od /Z7 /link !common_l!
+
+Error level check for compiling/linking errors
+
+    if "%ERRORLEVEL%" EQU "0" (
+        goto good
+    )
+    if "%ERRORLEVEL%" NEQ "0" (
+        goto bad
+    )
+
+copy stuff over
+    xcopy !target_exe! ..\build /i /y
+
+Run the result
+    ..\build\!target!.exe !TEST_SUITE!
+
+
+
+The syntax !count! represents the usage of a variable 
+with delayed variable expansion in a batch 
+script. The exclamation marks (!) are used to enclose 
+the name of the variable to indicate that it should be 
+expanded at execution time rather than when the line is read.
+
+In batch scripting, when delayed variable expansion is 
+enabled (usually with the command setlocal enabledelayedexpansion),
+you can use exclamation marks instead of percent 
+signs (%) to access the value of a variable within 
+loops or blocks of code. This allows you to work with 
+the most recent value of the variable rather than the value 
+it had when the block was initially read.
+
+set /A count +1 syntax?
+The line set /A count+=1 is used in a batch file to increment 
+the value of a numeric variable named count by 1. 
+The /A option is used to indicate that arithmetic 
+expression evaluation is being performed.
+
+Here's what each part of the line does:
+
+set: This is the command used to set or modify variables 
+in a batch file.
+
+/A: This option tells the set command that an arithmetic expression follows.
+
+count: This is the name of the variable being modified. 
+It's assumed that count has already been defined with a 
+numeric value before this line.
+
++=: This is the addition assignment operator. 
+It adds the value on the right side of the operator 
+to the value on the left side and stores the result 
+in the variable on the left side.
+
+1: This is the value being added to the current value 
+of the variable.
+
+So, when you encounter the line set /A count+=1 in a batch 
+file, it means that the variable count will have its 
+value incremented by 1.
+
