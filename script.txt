@@ -51,9 +51,27 @@ If we run again we see a message
 
 Ugh...  Why is this so hard?
 
+***
+
 First let's get rid of the message.
 
     if not exist bin mkdir bin
 
+Now we can't find the main.c because we are in the bin folder.
 
+cl ..\src\main.c -nologo
+
+***
+
+But now I'd like to go back to the directory we ran the batch file from,
+and not be inside a different directory after the script runs.
+
+pushd to the rescue (push directory, pop directory)
+pushd bin
+popd
+
+
+-----------------
+02_batch.bat
+-----------------
 
