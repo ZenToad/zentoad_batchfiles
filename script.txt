@@ -75,3 +75,82 @@ popd
 02_batch.bat
 -----------------
 
+Now we add a simple library.h/library.c file to 01_main.c
+When we try and compile that we get this error:
+
+C:\stream\dev-env\zentoad_batchfiles (main -> origin)
+λ 02_batch.bat
+01_main.c
+..\src\01_main.c(3): fatal error C1083: Cannot open include file: 'library.h': No such file or directory
+
+Why can't it find the library?  We have to tell the compiler where to find
+the necessary include files.
+
+We do this with the -I or /I flag
+
+    cl ..\src\01_main.c -I..\include -nologo
+
+But now we get this error:
+
+C:\stream\dev-env\zentoad_batchfiles (main -> origin)
+λ 02_batch.bat
+01_main.c
+01_main.obj : error LNK2019: unresolved external symbol library_hello referenced in function main
+01_main.exe : fatal error LNK1120: 1 unresolved externals
+
+Let's ask chatGPT what this error means.
+
+    'error LNK2019: unresolved external symbol'
+
+This error happens because there source code for the library isn't found.
+Sometimes this code is found in a Dynamic Link Library (*.dll) or
+a static library file (*.lib), but in this case we are just including
+the source code for the library in the project.
+
+    cl ..\src\01_main.c ..\src\library.c -I..\include -nologo
+
+C:\stream\dev-env\zentoad_batchfiles (main -> origin)
+λ bin\01_main.exe
+Hello world!
+Hello from library!!!
+
+-----------------
+03_batch.bat
+-----------------
+
+Ok we have seen how to change the directory to somewhere
+else and go back, how to add an include folder to the
+project, and how to add other source files.
+
+
+What is next?
+
+I'm getting tired of compiling the code and then also typing
+in the command to run the code, so let's just run the
+code after it compiles.
+
+pushd bin
+    REM  cl ..\src\01_main.c -I..\include -nologo
+    cl ..\src\01_main.c ..\src\library.c -I..\include -nologo
+    01_main.exe
+popd
+
+That was easy.
+What else do we need?  
+
+First build 03_main.c, and then add an error.
+
+Question:  What if the code has an error and won't compile?
+
+03_main.c has an error... and yet it still runs.  That 
+isn't what we want at all.
+
+We would like the script to only run the exe if the compile
+was successful, and print an error if it was not.
+
+    if "%ERRORLEVEL%" EQU "0" (
+        03_main.exe
+    )
+    if "%ERRORLEVEL%" NEQ "0" (
+        echo Error compiling code
+    )

@@ -1,0 +1,8 @@
+-Wall
+-std=c11
+-x
+c
+-Wno-missing-braces
+-D_CRT_SECURE_NO_WARNINGS
+-I
+include
