@@ -226,3 +226,217 @@ This is a good tool to have in your toolkit.
 @echo off
 xcopy "C:\SourceFolder\file.txt" "D:\DestinationFolder" /Y
 
+-----------------
+06_batch.bat
+-----------------
+What if you want to copy files after you have compiled
+everything?  Look no further than 'xcopy'
+
+
+The xcopy command is used in batch files to 
+copy files and directories from one location to another. 
+It provides more advanced copying options compared to the 
+basic copy command. 
+
+Here's the basic syntax of the xcopy command:
+
+    xcopy source destination [options]
+
+To learn more about the available options, you can 
+open a Command Prompt and type:
+
+    xcopy /? 
+
+to see the complete list of options and their explanations.
+
+What we can do now is make another folder 'build' and only copy in 
+the executable and leave all the intermediate files in the 'bin' folder.
+if we just add
+
+    xcopy %target_number%_main.exe ..\build 
+
+but the copytests folder does not exist we get this weird message when
+we run the batch file and waits for a keypress:
+
+    Does ..\copytests specify a file name
+    or directory name on the target
+    (F = file, D = directory)? 
+
+
+Currently I use these two options to keep this from happening
+
+  /I           If destination does not exist and copying more than one file,
+               assumes that destination must be a directory.
+  /Y           Suppresses prompting to confirm you want to overwrite an
+               existing destination file.
+
+If we run this again and the folder already exists we don't get this message
+but I would rather never have this show up.
+If we delete the copytests folder and add the options it will just work.
+
+    xcopy %target_number%_main.exe ..\build /I /Y
+
+Hmm, even with these it still doesn't work.
+The problem here is we are only coping one file, so...
+Took a bit to figure out for a directory you need a '\' at the end 
+of the path
+
+    xcopy %target_number%_main.exe ..\build\ /I /Y
+
+What we can do now is make another folder 'build' and only copy in 
+the executable and leave all the intermediate files in the 'bin' folder.
+
+    if not exist build mkdir build
+
+How do we delete a folder with files?  
+This uses the 'rmdir' command.  
+Let's look at the help for this command:
+
+λ rmdir /?
+Removes (deletes) a directory.
+
+RMDIR [/S] [/Q] [drive:]path
+RD [/S] [/Q] [drive:]path
+
+    /S      Removes all directories and files in the specified directory
+            in addition to the directory itself.  Used to remove a directory
+            tree.
+
+    /Q      Quiet mode, do not ask if ok to remove a directory tree with /S
+parse arguments.  
+
+We can add this to the batch file to always delete all the previous files
+and rebuild everything from scratch.
+
+(Don't worry about this being very inefficient, we will fix this
+later)
+
+    if exist bin rmdir /S /Q bin
+    if exist build rmdir /S /Q build
+
+This will delete these folders and the files inside before compiling
+the code.  This is essentially doing a clean and rebuild 
+
+
+-----------------
+07_batch.bat
+-----------------
+Now that we have a way to copy files and a way to delete files
+we can add an option to clean all files before compiling.
+
+You probably don't want to always delete everything and rebuild from
+scratch but sometimes you do.
+
+First I will show you the code to do this and then
+explain it.
+
+:parse_args
+if "%~1" == "" goto :end_parse_args
+
+if "%~1" == "-clean" (
+    if exist bin rmdir /S /Q bin
+    if exist build rmdir /S /Q build
+    echo CLEANING PROJECT FILES...
+    shift
+)
+:end_parse_args
+
+The most important parts of this are
+
+    "%1~"
+    shift
+
+
+The %~1 syntax in batch files is used to remove any 
+surrounding quotes from the value of the first 
+command-line argument (%1). It's particularly useful when 
+dealing with command-line arguments that may include spaces 
+and are wrapped in double quotes.
+
+Here's a breakdown of what each part of %~1 does:
+
+%1: Represents the first command-line argument passed to the batch file.
+
+~: This tilde character, when used with the variable (%1 in this case), 
+indicates that certain modifications should be applied to the 
+value of the variable.
+
+~ followed by a specific character (e.g., ~f, ~n, ~x, etc.): 
+Specifies the particular modification to apply to the variable.
+
+For example:
+
+    @echo off
+
+    REM Check if the first argument exists and display it with and without ~
+    if not "%~1" == "" (
+        echo Argument with quotes: "%1"
+        echo Argument without quotes: "%~1"
+    )
+
+If you run this batch file with the following command:
+
+    C:\> myscript.bat "Hello, World"
+
+The output would be:
+
+Argument with quotes: "Hello, World"
+Argument without quotes: Hello, World
+
+As you can see, %1 includes the surrounding double 
+quotes of the command-line argument, while %~1 removes them.
+
+Using %~1 is especially important when dealing 
+with file paths and spaces in command-line arguments. 
+It ensures that the batch file can handle such arguments correctly.
+
+
+shift:
+
+In a batch file, the shift command is used to shift the 
+values of command-line arguments one position to the left. 
+It is often used in batch scripts to iterate through and process 
+command-line arguments one by one.
+
+Here's how the shift command works:
+
+The value of %1 (the first command-line argument) is discarded.
+The value of %2 (the second command-line argument) becomes the new value of %1.
+The value of %3 (the third command-line argument) becomes the new value of %2, 
+and so on.
+
+This allows you to process multiple command-line arguments 
+sequentially without having to use a separate loop structure.
+
+Here's a simple example that demonstrates the use of the shift command:
+
+    @echo off
+
+    :loop
+    if "%~1" == "" goto :end_loop
+
+    echo Argument: %1
+    shift
+    goto :loop
+
+    :end_loop
+
+In this example, the script uses a loop to iterate through 
+all the command-line arguments. The shift command is used 
+inside the loop to move to the next argument. When there are no 
+more arguments (%1 is empty), the loop ends.
+
+For example, if you run the batch file with the following command:
+
+    C:\> myscript.bat arg1 arg2 arg3
+
+The output would be:
+
+    Argument: arg1
+    Argument: arg2
+    Argument: arg3
+
+The shift command is especially useful when you want to 
+process a variable number of command-line arguments 
+without knowing the exact count in advance. 
+It allows you to handle each argument one at a time as you shift through them.
