@@ -1,4 +1,3 @@
-// now we're going to add in a library
 #include <stdio.h>
 #include "library.h"
  

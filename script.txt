@@ -154,3 +154,75 @@ was successful, and print an error if it was not.
     if "%ERRORLEVEL%" NEQ "0" (
         echo Error compiling code
     )
+
+-----------------
+04_batch.bat
+-----------------
+You can see the 
+
+    cl ..\src\03_main.c ..\src\library.c -I..\include -nologo
+
+is already starting to get long.  You can imagine a larger project
+will have a ton of stuff here.
+
+Let's add some variables to hold all this stuff and make it
+easier to read
+
+This is how you set a variable:
+
+    set var=value 
+
+and this is how you get the value from a variable:
+
+    %var%
+
+
+set target=..\src\04_main.c
+set source_files=..\src\library.c
+set include_dirs=-I..\include
+set flags=-nologo
+
+    cl %target% %source_files% %include_dirs% %flags%
+
+Finally, I don't like the 04_main.exe being in two different
+places so let's fix that.
+
+set target_number=04
+set target=..\src\%target_number%_main.c
+
+    %target_number%_main.exe
+
+This is a bit fancy for such a simple example, but it shows
+how you can use one %var% when making another variable.
+
+-----------------
+05_batch.bat
+-----------------
+
+Adding labels and goto's
+
+It isn't always necessary but it is good to know
+that you can use labels and goto to jump around
+in the batch file.
+
+Don't forget to change the target number
+
+    set target_number=05
+
+If there is an error it will jump to bad, otherwise
+it will jump to good.
+
+C:\stream\dev-env\zentoad_batchfiles (main -> origin)
+λ 05_batch.bat
+05_main.c
+..\src\05_main.c(8): error C2143: syntax error: missing ';' before 'return'
+library.c
+Generating Code...
+FAILED
+
+This is a good tool to have in your toolkit.
+
+
+@echo off
+xcopy "C:\SourceFolder\file.txt" "D:\DestinationFolder" /Y
+

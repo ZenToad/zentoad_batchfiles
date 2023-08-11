@@ -2,8 +2,8 @@
 #include "library.h"
  
 int main(int argc, char **argv) {
-    printf(" Hello world from 03_batch!\n");
+    printf(" Hello world from 04_batch!\n");
 
     library_hello();
-    return 0 // missing ';'
+    return 0; 
 }

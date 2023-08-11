@@ -9,6 +9,6 @@ pushd bin
         03_main.exe
     )
     if "%ERRORLEVEL%" NEQ "0" (
-        echo Error compiling code
+        echo Error compiling coded
     )
 popd
