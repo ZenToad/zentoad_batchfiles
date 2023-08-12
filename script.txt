@@ -75,7 +75,7 @@ popd
 02_batch.bat
 -----------------
 
-Now we add a simple library.h/library.c file to 01_main.c
+Now we add a simple library.h/library.c file to 02_main.c
 When we try and compile that we get this error:
 
 C:\stream\dev-env\zentoad_batchfiles (main -> origin)
@@ -130,9 +130,9 @@ in the command to run the code, so let's just run the
 code after it compiles.
 
 pushd bin
-    REM  cl ..\src\01_main.c -I..\include -nologo
-    cl ..\src\01_main.c ..\src\library.c -I..\include -nologo
-    01_main.exe
+    REM  cl ..\src\03_main.c -I..\include -nologo
+    cl ..\src\03_main.c ..\src\library.c -I..\include -nologo
+    03_main.exe
 popd
 
 That was easy.
@@ -222,9 +222,6 @@ FAILED
 
 This is a good tool to have in your toolkit.
 
-
-@echo off
-xcopy "C:\SourceFolder\file.txt" "D:\DestinationFolder" /Y
 
 -----------------
 06_batch.bat
@@ -440,3 +437,13 @@ The shift command is especially useful when you want to
 process a variable number of command-line arguments 
 without knowing the exact count in advance. 
 It allows you to handle each argument one at a time as you shift through them.
+
+
+-----------------
+delayed_expansion.bat
+-----------------
+
+We aren't going to use this for this example but it is
+good to know this is avaiable if you ever need it.
+
+show the batch file and talk about the !var! stuff
