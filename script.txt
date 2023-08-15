@@ -80,23 +80,24 @@ When we try and compile that we get this error:
 
 C:\stream\dev-env\zentoad_batchfiles (main -> origin)
 λ 02_batch.bat
-01_main.c
-..\src\01_main.c(3): fatal error C1083: Cannot open include file: 'library.h': No such file or directory
+02_main.c
+..\src\02_main.c(3): fatal error C1083: Cannot open include file: 'library.h': 
+    No such file or directory
 
 Why can't it find the library?  We have to tell the compiler where to find
 the necessary include files.
 
 We do this with the -I or /I flag
 
-    cl ..\src\01_main.c -I..\include -nologo
+    cl ..\src\02_main.c -I..\include -nologo
 
 But now we get this error:
 
 C:\stream\dev-env\zentoad_batchfiles (main -> origin)
 λ 02_batch.bat
-01_main.c
-01_main.obj : error LNK2019: unresolved external symbol library_hello referenced in function main
-01_main.exe : fatal error LNK1120: 1 unresolved externals
+02_main.c
+02_main.obj : error LNK2019: unresolved external symbol library_hello referenced in function main
+02_main.exe : fatal error LNK1120: 1 unresolved externals
 
 Let's ask chatGPT what this error means.
 
@@ -107,10 +108,10 @@ Sometimes this code is found in a Dynamic Link Library (*.dll) or
 a static library file (*.lib), but in this case we are just including
 the source code for the library in the project.
 
-    cl ..\src\01_main.c ..\src\library.c -I..\include -nologo
+    cl ..\src\02_main.c ..\src\library.c -I..\include -nologo
 
 C:\stream\dev-env\zentoad_batchfiles (main -> origin)
-λ bin\01_main.exe
+λ bin\02_main.exe
 Hello world!
 Hello from library!!!
 
@@ -160,7 +161,7 @@ was successful, and print an error if it was not.
 -----------------
 You can see the 
 
-    cl ..\src\03_main.c ..\src\library.c -I..\include -nologo
+    cl ..\src\04_main.c ..\src\library.c -I..\include -nologo
 
 is already starting to get long.  You can imagine a larger project
 will have a ton of stuff here.
