@@ -14,6 +14,7 @@ if "%~1" == "-clean" (
     if exist build rmdir /S /Q build
     echo CLEANING PROJECT FILES...
     shift
+    goto parse_args
 )
 :end_parse_args
 
